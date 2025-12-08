@@ -3,7 +3,7 @@ FastAPI Pagination Custom Page
 """
 
 from abc import ABC
-from typing import Any, Generic, Optional, Sequence, TypeVar
+from typing import Any, Optional, Sequence, TypeVar
 
 from fastapi import Query
 from fastapi_pagination.bases import AbstractPage, AbstractParams
@@ -24,7 +24,7 @@ class CustomPageParams(LimitOffsetParams):
 T = TypeVar("T")
 
 
-class CustomPage(AbstractPage[T], Generic[T], ABC):
+class CustomPage(AbstractPage[T], ABC):
     """
     Custom Page
     """

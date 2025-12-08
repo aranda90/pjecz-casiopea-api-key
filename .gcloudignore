@@ -26,3 +26,5 @@ __pycache__/
 /rest-client
 /tests
 /venv
+
+/gclouddeploy.sh
