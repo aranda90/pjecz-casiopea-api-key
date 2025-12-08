@@ -1,22 +1,29 @@
-.bashrc
 .directory
-.env
 .DS_Store
 .~lock.*
 
-*.code-workspace
 *.csv
 *.log
 *.py[cod]
+*.sqlite3
+*.sqlite3-journal
+*.session.sql
 *.sql
-*.sqlite
-*.pdf
+*.xls
 *.xlsx
+*.XLS
+*.XLSX
+
+.bashrc
+.env
+poetry.lock
 
 __pycache__/
 *.egg-info/
 
-/poetry.lock
 /.idea/
 /.venv/
+/seed/
 /venv/
+
+gclouddeploy.sh

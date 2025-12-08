@@ -5,70 +5,29 @@ Settings
 import os
 from functools import lru_cache
 
-import google.auth
-from google.cloud import secretmanager
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
-PROJECT_ID = os.getenv("PROJECT_ID", "")  # Por defecto está vacío, esto significa estamos en modo local
-SERVICE_PREFIX = os.getenv("SERVICE_PREFIX", "pjecz_casiopea_flask")
-
-
-def get_secret(secret_id: str, default: str = "") -> str:
-    """Get secret from Google Cloud Secret Manager"""
-
-    # Si PROJECT_ID está vacío estamos en modo de desarrollo y debe usar las variables de entorno
-    if PROJECT_ID == "":
-        # Entregar el valor de la variable de entorno, si no esta definida, se entrega el valor por defecto
-        value = os.getenv(secret_id.upper(), "")
-        if value == "":
-            return default
-        return value
-
-    # Obtener el project_id con la librería de Google Auth
-    _, project_id = google.auth.default()
-
-    # Si NO estamos en Google Cloud, entonces se está ejecutando de forma local
-    if not project_id:
-        # Entregar el valor de la variable de entorno, si no esta definida, se entrega el valor por defecto
-        value = os.getenv(secret_id.upper())
-        if value is None:
-            return default
-        return value
-
-    # Tratar de obtener el secreto
-    try:
-        # Create the secret manager client
-        client = secretmanager.SecretManagerServiceClient()
-        # Build the resource name of the secret version
-        secret = f"{SERVICE_PREFIX}_{secret_id}"
-        name = client.secret_version_path(project_id, secret, "latest")
-        # Access the secret version
-        response = client.access_secret_version(name=name)
-        # Return the decoded payload
-        return response.payload.data.decode("UTF-8")
-    except:
-        pass
-
-    # Entregar el valor por defecto porque no existe el secreto, ni la variable de entorno
-    return default
+load_dotenv()
+SERVICE_PREFIX = os.getenv("SERVICE_PREFIX", "pjecz_casiopea_api_key")
 
 
 class Settings(BaseSettings):
     """Settings"""
 
-    CONTROL_ACCESO_URL: str = os.getenv("CONTROL_ACCESO_URL")
-    CONTROL_ACCESO_API_KEY: str = os.getenv("CONTROL_ACCESO_API_KEY")
-    CONTROL_ACCESO_APLICACION: int = int(os.getenv("CONTROL_ACCESO_APLICACION"))
-    CONTROL_ACCESO_TIMEOUT: int = int(os.getenv("CONTROL_ACCESO_TIMEOUT"))
-    DB_HOST: str = get_secret("DB_HOST")
-    DB_PORT: int = get_secret("DB_PORT")
-    DB_NAME: str = get_secret("DB_NAME")
-    DB_PASS: str = get_secret("DB_PASS")
-    DB_USER: str = get_secret("DB_USER")
-    FERNET_KEY: str = get_secret("FERNET_KEY")
-    ORIGINS: str = get_secret("ORIGINS")
-    SALT: str = get_secret("SALT")
-    TZ: str = get_secret("TZ")
+    CONTROL_ACCESO_URL: str = os.getenv("CONTROL_ACCESO_URL", "")
+    CONTROL_ACCESO_API_KEY: str = os.getenv("CONTROL_ACCESO_API_KEY", "")
+    CONTROL_ACCESO_APLICACION: int = int(os.getenv("CONTROL_ACCESO_APLICACION", "0"))
+    CONTROL_ACCESO_TIMEOUT: int = int(os.getenv("CONTROL_ACCESO_TIMEOUT", "0"))
+    DB_HOST: str = os.getenv("DB_HOST", "127.0.0.1")
+    DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
+    DB_NAME: str = os.getenv("DB_NAME", "pjecz_casiopea")
+    DB_PASS: str = os.getenv("DB_PASS", "")
+    DB_USER: str = os.getenv("DB_USER", "")
+    FERNET_KEY: str = os.getenv("FERNET_KEY", "")
+    ORIGINS: str = os.getenv("ORIGINS", "http://127.0.0.1:3000,http://localhost:3000")
+    SALT: str = os.getenv("SALT", "")
+    TZ: str = os.getenv("TZ", "America/Mexico_City")
 
     class Config:
         """Load configuration"""
