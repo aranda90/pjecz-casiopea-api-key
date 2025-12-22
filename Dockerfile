@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # Default port (Cloud Run will override this via PORT env)
-ENV PORT=8000
+ENV PORT=8001
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
